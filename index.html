@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porsche 3D 🔥</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: radial-gradient(circle, #8b0000, #000);
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+}
+
+#ui {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+h1 {
+  font-size: 2.2em;
+  text-shadow: 0 0 15px red;
+}
+
+button {
+  padding: 18px 45px;
+  font-size: 22px;
+  margin: 15px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.yes {
+  background: linear-gradient(45deg, red, darkred);
+  color: white;
+}
+
+.no {
+  background: black;
+  color: white;
+  position: absolute;
+}
+canvas {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div id="ui">
+  <h1 id="q">هل أنت عاشقة بورش؟</h1>
+  <button class="yes" id="yes">نعم</button>
+  <button class="no" id="no">لا</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const ui = document.getElementById("ui");
+
+function moveNo(){
+  noBtn.style.left = Math.random()*200 - 100 + "px";
+  noBtn.style.top  = Math.random()*200 - 100 + "px";
+}
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+
+yesBtn.onclick = () => {
+  ui.style.display = "none";
+  start3D();
+};
+
+function start3D(){
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x000000);
+
+  const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 100);
+  camera.position.set(0, 1.5, 4);
+
+  const renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(innerWidth, innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+
+  const light1 = new THREE.DirectionalLight(0xff0000, 1);
+  light1.position.set(5,5,5);
+  scene.add(light1);
+
+  const light2 = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(light2);
+
+  // سيارة مؤقتة (مجسم)
+  const car = new THREE.Mesh(
+    new THREE.BoxGeometry(2,0.6,1),
+    new THREE.MeshStandardMaterial({color: 0xff0000})
+  );
+  scene.add(car);
+
+  function animate(){
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+</script>
+
+</body>
+</html>
